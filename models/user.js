@@ -1,8 +1,7 @@
 // models/user.js
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you've set up the database connection in the config folder
-
+const sequelize = require('../config/database');
 const User = sequelize.define('User', {
   id: {
     type: DataTypes.INTEGER,

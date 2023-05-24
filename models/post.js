@@ -1,7 +1,6 @@
 // models/post.js
 
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Assuming you've set up the database connection in the config folder
 const User = require('./user');
 const Comment = require('./comment');
 
