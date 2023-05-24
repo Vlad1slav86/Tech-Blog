@@ -1,0 +1,30 @@
+{
+  "name": "tech-blog",
+  "version": "1.0.0",
+  "description": "A blog website",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vlad1slav86/Tech-Blog.git"
+  },
+  "keywords": [
+    "tech",
+    "blog"
+  ],
+  "author": "Vladislav Mladenov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vlad1slav86/Tech-Blog/issues"
+  },
+  "homepage": "https://github.com/Vlad1slav86/Tech-Blog#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.0.7",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.3.2",
+    "sequelize": "^6.31.1"
+  }
+}
