@@ -1,5 +1,3 @@
-// models/post.js
-
 const { DataTypes } = require('sequelize');
 const User = require('./user');
 const Comment = require('./comment');
