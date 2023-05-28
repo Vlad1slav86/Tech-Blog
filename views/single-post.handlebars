@@ -1,0 +1,18 @@
+<h1>{{post.title}}</h1>
+<p>{{post.content}}</p>
+
+<h2>Comments</h2>
+{{#each comments}}
+<div class="comment">
+  <p>{{this.text}}</p>
+  <p>By {{this.User.username}}</p>
+</div>
+{{/each}}
+
+<hr>
+
+<form action="/comments" method="POST">
+  <input type="hidden" name="postId" value="{{post.id}}">
+  <textarea name="text" placeholder="Leave a comment" required></textarea>
+  <button type="submit">Submit Comment</button>
+</form>
