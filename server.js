@@ -2,13 +2,10 @@ const express = require('express');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const path = require('path');
-const sequelize = require('./config/config.json'); 
+const Sequelize = require('sequelize');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
-
-
-
 
 const app = express();
 
@@ -29,22 +26,27 @@ app.use(express.urlencoded({ extended: false }));
 
 // Set up static file serving
 app.use(express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'views'));
 
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/comments', commentRoutes);
-
+app.use('/', homeRoutes);
 
 app.get('/', (req, res) => {
-  res.send('Welcome to the blog site!'); 
+  res.send('Welcome to the blog site!');
 });
 
 const PORT = process.env.PORT || 3000;
+const sequelize = new Sequelize(require('./config/config.json')[process.env.NODE_ENV]);
 
-sequelize.sync({ force: false }).then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server started on port ${PORT}`);
+sequelize.authenticate()
+  .then(() => {
+    console.log('Database connection has been established successfully.');
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Unable to connect to the database:', error);
   });
-}).catch(err => {
-  console.error('Unable to connect to the database:', err);
-});
