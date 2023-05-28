@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const { Post, Comment } = require('./index');
+
 const User = sequelize.define('User', {
   id: {
     type: DataTypes.INTEGER,
@@ -35,7 +37,7 @@ const User = sequelize.define('User', {
   },
 });
 
-User.hasMany(models.Post, { foreignKey: 'userId' });
-User.hasMany(models.Comment, { foreignKey: 'userId' });
+User.hasMany(Post, { foreignKey: 'userId' });
+User.hasMany(Comment, { foreignKey: 'userId' });
 
 module.exports = User;

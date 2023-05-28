@@ -2,7 +2,7 @@
     "development": {
       "username": "root",
       "password": "",
-      "database": "tech_blog_db",
+      "database": "techblog_db",
       "host": "localhost",
       "dialect": "mysql"
     },

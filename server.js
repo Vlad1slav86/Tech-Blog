@@ -2,10 +2,13 @@ const express = require('express');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
 const path = require('path');
-const Sequelize = require('sequelize');
+const Sequelize = require('./config/database');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
+const authRoutes = require('./routes/auth');
+
+
 
 const app = express();
 
@@ -32,13 +35,16 @@ app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/comments', commentRoutes);
 app.use('/', homeRoutes);
+app.use('/auth', authRoutes);
+
+
 
 app.get('/', (req, res) => {
   res.send('Welcome to the blog site!');
 });
 
 const PORT = process.env.PORT || 3000;
-const sequelize = new Sequelize(require('./config/config.json')[process.env.NODE_ENV]);
+const sequelize = new Sequelize(require('./config/database')[process.env.NODE_ENV]);
 
 sequelize.authenticate()
   .then(() => {
