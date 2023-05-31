@@ -1,38 +1,35 @@
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-require('dotenv').config();
+const User = require('./User');
+const Post = require('./Post');
+const Comment = require('./Comment');
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'mysql',
-    port: process.env.DB_PORT || 3306
-  }
-);
 
-const models = {};
+User.hasMany(Post, {
+    foreignKey: 'user_id'
+})
 
-// Read all files in the current directory and import the models
-fs.readdirSync(__dirname)
-  .filter((file) => file !== 'index.js')
-  .forEach((file) => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    models[model.name] = model;
-  });
+User.hasMany(Comment, {
+    foreignKey: 'user_id'
+})
 
-// Create associations between the models, if needed
-Object.values(models).forEach((model) => {
-  if (model.associate) {
-    model.associate(models);
-  }
-});
+Post.belongsTo(User, {
+    foreignKey: 'user_id'
+})
 
-models.sequelize = sequelize;
-models.Sequelize = Sequelize;
+Post.hasMany(Comment, {
+    foreignKey: 'post_id'
+})
 
-module.exports = models;
+Comment.belongsTo(User, {
+    foreignKey: 'user_id'
+})
 
+Comment.belongsTo(Post, {
+    foreignKey: 'post_id'
+})
+
+
+module.exports = {
+    User,
+    Post,
+    Comment
+};
