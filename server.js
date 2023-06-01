@@ -1,58 +1,51 @@
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
+const logger = require('morgan');
 const session = require('express-session');
 const exphbs = require('express-handlebars');
-const path = require('path');
-const Sequelize = require('./config/database');
-const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post');
-const commentRoutes = require('./routes/comment');
-const authRoutes = require('./routes/auth');
-
-
+const routes = require('./controllers');
+const helpers = require('./utils/helpers');
+const sequelize = require('./config/connection');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
+const PORT = process.env.PORT || 3001;
 
-// Set up session middleware
-app.use(session({
-  secret: 'your_secret_key',
+// Set up Handlebars.js engine with custom helpers
+const hbs = exphbs.create({ helpers });
+const accessLogStream = fs.createWriteStream(path.join(__dirname, './logs/access.log'), { flags: 'a' });
+
+const sess = {
+  secret: 'Super secret secret', // CHANGE THIS
+  cookie: {
+    maxAge: 1 * 60 * 60 * 1000, // UPDATE THIS AS DESIRED, currently set to expire in 1 hour
+    httpOnly: true,
+    secure: false,
+    sameSite: 'strict',
+  },
   resave: false,
-  saveUninitialized: false
-}));
+  saveUninitialized: true,
+  store: new SequelizeStore({
+    db: sequelize
+  })
+};
 
-// Set up Handlebars view engine
-app.engine('handlebars', exphbs());
+app.use(session(sess));
+
+// Inform Express.js on which template engine to use
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-// Set up body parsing middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-// Set up static file serving
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('views', path.join(__dirname, 'views'));
+app.use(logger('tiny', { stream: accessLogStream }));
 
-app.use('/users', userRoutes);
-app.use('/posts', postRoutes);
-app.use('/comments', commentRoutes);
-app.use('/', homeRoutes);
-app.use('/auth', authRoutes);
+app.use(routes);
 
-
-
-app.get('/', (req, res) => {
-  res.send('Welcome to the blog site!');
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () =>
+    console.log(`App running at http://localhost:${PORT}`));
 });
-
-const PORT = process.env.PORT || 3000;
-const sequelize = new Sequelize(require('./config/database')[process.env.NODE_ENV]);
-
-sequelize.authenticate()
-  .then(() => {
-    console.log('Database connection has been established successfully.');
-    app.listen(PORT, () => {
-      console.log(`Server started on port ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error('Unable to connect to the database:', error);
-  });
+ 
