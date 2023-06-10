@@ -1,18 +1,23 @@
-<h1>{{post.title}}</h1>
-<p>{{post.content}}</p>
+<a href="/dashboard" class="go-back"> &larr; Back to dashboard</a>
+<br>
+<br>
 
-<h2>Comments</h2>
-{{#each comments}}
-<div class="comment">
-  <p>{{this.text}}</p>
-  <p>By {{this.User.username}}</p>
-</div>
-{{/each}}
+{{> post-info post}}
 
-<hr>
+{{#if loggedIn}}
+<form class="comment-form">
+    <div>
+        <textarea name="comment-body"></textarea>
+    </div>
 
-<form action="/comments" method="POST">
-  <input type="hidden" name="postId" value="{{post.id}}">
-  <textarea name="text" placeholder="Leave a comment" required></textarea>
-  <button type="submit">Submit Comment</button>
+    <div>
+        <button type="submit">Add Comment</button>
+    </div>
 </form>
+{{/if}}
+
+{{> comments post.comments}}
+
+{{#if loggedIn}}
+<script src="/js/comment.js"></script>
+{{/if}}

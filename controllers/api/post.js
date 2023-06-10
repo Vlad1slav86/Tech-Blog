@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Post = require('../models/post');
-const Comment = require('../models/comment');
+const Post = require('../../models/post');
+const Comment = require('../../models/comment');
 
 // GET route to display a single post
 router.get('/:id', async (req, res) => {
@@ -21,11 +21,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { title, content } = req.body;
-    const post = await Post.create({ title, content });
-    res.status(201).json({ message: 'Post created successfully', post });
+    const post = await Post.create({ title, content, user_id:req.session.user_id });
+    res.status(201).json({ message: 'Post created successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Server error' });
+    res.status(500).json(error.message);
   }
 });
 
