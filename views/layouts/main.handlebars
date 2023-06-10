@@ -1,29 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <meta charset="utf-8">
-  <title>Blog Site</title>
-  <link rel="stylesheet" href="/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tech Blog</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
+
 <body>
-  <header>
-    <h1>Blog Site</h1>
-    <nav>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/posts">All Posts</a></li>
-        <li><a href="/users/login">Login</a></li>
-        <li><a href="/users/register">Register</a></li>
-      </ul>
-    </nav>
-  </header>
+    <div class="wrapper">
+        <header>
+            <h1>
+                <a href="/">HOME</a>
+            </h1>
+            <nav>
+                {{#if loggedIn}}
+                <a href="/dashboard">DASHBOARD</a>
+                <button id="logout" class="btn-no-style logout">logout</button>
+                {{else}}
+                <a href="/login">LOGIN</a>
+                {{/if}}
+            </nav>
+        </header>
+        <div class="site-row">
+            <div class="site-name">
+                <h1>The Tech Blog</h1>
+            </div>
+        </div>
+        <main>
+            {{{ body }}}
+        </main>
+    </div>
 
-  <main>
-    {{{body}}}
-  </main>
-
-  <footer>
-    <p>&copy; 2023 Blog Site. All rights reserved.</p>
-  </footer>
+    {{#if loggedIn}}
+    <script src="/js/logout.js"></script>
+    {{/if}}
 </body>
+
 </html>
